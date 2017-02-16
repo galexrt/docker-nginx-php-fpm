@@ -1,0 +1,41 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: php-fpm
+  name: php-fpm
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: php-fpm
+      labels:
+        app: php-fpm
+    spec:
+      volumes:
+        - name: php-fpm-conf
+          configMap:
+            name: php-fpm-conf
+        - name: php-fpm-pools-conf
+          configMap:
+            name: php-fpm-pools-conf
+      containers:
+        - name: php-fpm
+          image: php-fpm:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: php-fpm-conf
+              mountPath: /etc/php/7.0/fpm/php-fpm.conf
+            - name: php-fpm-pools-conf
+              mountPath: /etc/php/7.0/fpm/pool.d/
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "250m"
+            limits:
+              memory: "5000Mi"
+              cpu: "500m"
