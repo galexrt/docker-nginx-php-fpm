@@ -1,1 +1,9 @@
-* Create nginx pvc
+# PHP-FPM TODO
+1. Evaluate if should use Alpine or other dist image for PHP-FPM
+2. Get a list of common php modules
+3. Find a way to install php 7.1 redis module
+4. Configure it to listen tcp and as a service in Kubernetes
+5. Use Redis as session handler (see https://www.digitalocean.com/community/tutorials/how-to-set-up-a-redis-server-as-a-session-handler-for-php-on-ubuntu-14-04)
+
+# NGINX TODO
+Nothing yet
