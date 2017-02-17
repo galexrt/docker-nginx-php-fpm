@@ -1,1 +1,203 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-fpm-conf
+data:
+  php-fpm.conf: |
+    ;;;;;;;;;;;;;;;;;;;;;
+    ; FPM Configuration ;
+    ;;;;;;;;;;;;;;;;;;;;;
+
+    ; All relative paths in this configuration file are relative to PHP's install
+    ; prefix (/usr). This prefix can be dynamically changed by using the
+    ; '-p' argument from the command line.
+
+    ;;;;;;;;;;;;;;;;;;
+    ; Global Options ;
+    ;;;;;;;;;;;;;;;;;;
+
+    [global]
+    ; Pid file
+    ; Note: the default prefix is /var
+    ; Default Value: none
+    pid = /run/php/php7.0-fpm.pid
+
+    ; Error log file
+    ; If it's set to "syslog", log is sent to syslogd instead of being written
+    ; in a local file.
+    ; Note: the default prefix is /var
+    ; Default Value: log/php-fpm.log
+    error_log = /var/log/php7.0-fpm.log
+
+    ; syslog_facility is used to specify what type of program is logging the
+    ; message. This lets syslogd specify that messages from different facilities
+    ; will be handled differently.
+    ; See syslog(3) for possible values (ex daemon equiv LOG_DAEMON)
+    ; Default Value: daemon
+    ;syslog.facility = daemon
+
+    ; syslog_ident is prepended to every message. If you have multiple FPM
+    ; instances running on the same server, you can change the default value
+    ; which must suit common needs.
+    ; Default Value: php-fpm
+    ;syslog.ident = php-fpm
+
+    ; Log level
+    ; Possible Values: alert, error, warning, notice, debug
+    ; Default Value: notice
+    ;log_level = notice
+
+    ; If this number of child processes exit with SIGSEGV or SIGBUS within the time
+    ; interval set by emergency_restart_interval then FPM will restart. A value
+    ; of '0' means 'Off'.
+    ; Default Value: 0
+    ;emergency_restart_threshold = 0
+
+    ; Interval of time used by emergency_restart_interval to determine when
+    ; a graceful restart will be initiated.  This can be useful to work around
+    ; accidental corruptions in an accelerator's shared memory.
+    ; Available Units: s(econds), m(inutes), h(ours), or d(ays)
+    ; Default Unit: seconds
+    ; Default Value: 0
+    ;emergency_restart_interval = 0
+
+    ; Time limit for child processes to wait for a reaction on signals from master.
+    ; Available units: s(econds), m(inutes), h(ours), or d(ays)
+    ; Default Unit: seconds
+    ; Default Value: 0
+    ;process_control_timeout = 0
+
+    ; The maximum number of processes FPM will fork. This has been design to control
+    ; the global number of processes when using dynamic PM within a lot of pools.
+    ; Use it with caution.
+    ; Note: A value of 0 indicates no limit
+    ; Default Value: 0
+    ; process.max = 128
+
+    ; Specify the nice(2) priority to apply to the master process (only if set)
+    ; The value can vary from -19 (highest priority) to 20 (lower priority)
+    ; Note: - It will only work if the FPM master process is launched as root
+    ;       - The pool process will inherit the master process priority
+    ;         unless it specified otherwise
+    ; Default Value: no set
+    ; process.priority = -19
+
+    ; Send FPM to background. Set to 'no' to keep FPM in foreground for debugging.
+    ; Default Value: yes
+    ;daemonize = yes
+
+    ; Set open file descriptor rlimit for the master process.
+    ; Default Value: system defined value
+    ;rlimit_files = 1024
+
+    ; Set max core size rlimit for the master process.
+    ; Possible Values: 'unlimited' or an integer greater or equal to 0
+    ; Default Value: system defined value
+    ;rlimit_core = 0
+
+    ; Specify the event mechanism FPM will use. The following is available:
+    ; - select     (any POSIX os)
+    ; - poll       (any POSIX os)
+    ; - epoll      (linux >= 2.5.44)
+    ; - kqueue     (FreeBSD >= 4.1, OpenBSD >= 2.9, NetBSD >= 2.0)
+    ; - /dev/poll  (Solaris >= 7)
+    ; - port       (Solaris >= 10)
+    ; Default Value: not set (auto detection)
+    ;events.mechanism = epoll
+
+    ; When FPM is build with systemd integration, specify the interval,
+    ; in second, between health report notification to systemd.
+    ; Set to 0 to disable.
+    ; Available Units: s(econds), m(inutes), h(ours)
+    ; Default Unit: seconds
+    ; Default value: 10
+    ;systemd_interval = 10
+
+    ;;;;;;;;;;;;;;;;;;;;
+    ; Pool Definitions ;
+    ;;;;;;;;;;;;;;;;;;;;
+
+    ; Multiple pools of child processes may be started with different listening
+    ; ports and different management options.  The name of the pool will be
+    ; used in logs and stats. There is no limitation on the number of pools which
+    ; FPM can handle. Your system will tell you anyway :)
+
+    ; Include one or more files. If glob(3) exists, it is used to include a bunch of
+    ; files from a glob(3) pattern. This directive can be used everywhere in the
+    ; file.
+    ; Relative path can also be used. They will be prefixed by:
+    ;  - the global prefix if it's been set (-p argument)
+    ;  - /usr otherwise
+    include=/etc/php/7.0/fpm/pool.d/*.conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-fpm-pools-conf
+data:
+  www.conf: |
+    [www]
+    listen = 127.0.0.1:9000
+    user = www-data
+    group = www-data
+    pm = dynamic
+    pm.max_children = 20
+    pm.start_servers = 5
+    pm.min_spare_servers = 5
+    pm.max_spare_servers = 12
+    pm.max_requests = 0
+    request_terminate_timeout = 120
+    env[TMP] = /var/tmp/
+    env[TMPDIR] = /var/tmp/
+    env[TEMP] = /var/tmp/
+    php_admin_value[session.save_path] = /var/tmp/
+    php_admin_value[upload_tmp_dir] = /var/tmp/
+
+    php_admin_flag[allow_call_time_pass_reference] = Off
+    php_admin_flag[allow_url_fopen] = On
+    php_flag[asp_tags] = Off
+    php_flag[display_errors] = Off
+    php_flag[display_startup_errors] = Off
+    php_admin_flag[enable_dl] = Off
+    php_value[error_reporting] = E_ALL & ~E_NOTICE
+    php_admin_flag[expose_php] = Off
+    php_admin_flag[file_uploads] = On
+    php_admin_flag[cgi.force_redirect] = 1
+    php_admin_value[gpc_order] = "GPC"
+    php_flag[html_errors] = Off
+    php_admin_flag[ignore_repeated_errors] = Off
+    php_admin_flag[ignore_repeated_source] = Off
+    php_value[include_path] = ".:/usr/share/php/"
+    php_flag[log_errors] = On
+    php_admin_flag[log_errors] = On
+    php_value[log_errors_max_len] = 1024
+    php_flag[magic_quotes_gpc] = Off
+    php_flag[magic_quotes_runtime] = Off
+    php_flag[magic_quotes_sybase] = Off
+    php_value[max_execution_time] = 30
+    php_admin_value[max_input_time] = 60
+    php_admin_value[memory_limit] = 128M
+    php_admin_value[open_basedir] =     "/var/www/:/var/tmp/:/usr/share/php/:/tmp/"
+    php_admin_value[output_buffering] = 4096
+    php_admin_value[post_max_size] = 64M
+    php_admin_value[precision] = 14
+    php_admin_flag[register_argc_argv] = Off
+    php_admin_flag[report_memleaks] = On
+    php_admin_value[sendmail_path] = "/usr/sbin/sendmail -t -i -f"
+    php_value[session.auto_start] = 0
+    php_value[session.cookie_domain] =
+    php_value[session.cookie_lifetime] = 0
+    php_value[session.cookie_path] = /
+    php_admin_value[session.gc_divisor] = 1000
+    php_admin_value[session.gc_probability] = 1
+    php_value[session.name] = PHPSESSID
+    php_value[session.serialize_handler] = php
+    php_flag[session.use_cookies] = 1
+    php_flag[short_open_tag] = On
+    php_flag[suhosin.simulation] = Off
+    php_flag[track_errors] = Off
+    php_value[upload_max_filesize] = 128M
+    php_admin_value[variables_order] = "GPCS"
+    php_admin_value[opcache.restrict_api] = "/var/www"
+    php_admin_value[date.timezone] = "Etc/UTC"

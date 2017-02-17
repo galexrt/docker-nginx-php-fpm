@@ -1,1 +1,16 @@
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: php-fpm
+  name: php-fpm
+spec:
+  ports:
+  - name: fpm
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: php-fpm
+  type: ClusterIP

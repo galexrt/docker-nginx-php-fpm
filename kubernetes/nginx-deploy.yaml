@@ -17,21 +17,27 @@ spec:
         - name: nginx-conf
           configMap:
             name: nginx-conf
+            items:
+            - key: nginx.conf
+              path: nginx.conf
         - name: nginx-sites-enabled-conf
           configMap:
             name: nginx-sites-enabled-conf
       containers:
         - name: nginx
-          image: nginx:latest
+          image: nginx:mainline-alpine
           imagePullPolicy: Always
           ports:
             - containerPort: 80
             - containerPort: 443
           volumeMounts:
             - name: nginx-conf
-              mountPath: /etc/nginx/nginx.conf
+              mountPath: /etc/nginx
             - name: nginx-sites-enabled-conf
               mountPath: /etc/nginx/sites-enabled
+            - name: grafana-persistent-storage
+              persistentVolumeClaim:
+                claimName: nginx-pv-claim
           resources:
             requests:
               memory: "200Mi"

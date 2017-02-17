@@ -6,7 +6,7 @@ metadata:
     app: php-fpm
   name: php-fpm
 spec:
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       name: php-fpm
@@ -22,11 +22,11 @@ spec:
             name: php-fpm-pools-conf
       containers:
         - name: php-fpm
-          image: php-fpm:latest
+          image: php:7-fpm-alpine
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
-            - containerPort: 443
+            - name: fpm
+              containerPort: 9000
           volumeMounts:
             - name: php-fpm-conf
               mountPath: /etc/php/7.0/fpm/php-fpm.conf
