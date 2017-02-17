@@ -7,3 +7,6 @@
 
 # NGINX TODO
 Nothing yet
+
+# Kubernetes manifests
+* Find/Create redis deployment
