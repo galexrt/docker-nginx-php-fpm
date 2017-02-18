@@ -1,6 +1,0 @@
-# PHP-FPM TODO
-3. Configure it to listen tcp and as a service in Kubernetes
-4. Use Redis as session handler (see https://www.digitalocean.com/community/tutorials/how-to-set-up-a-redis-server-as-a-session-handler-for-php-on-ubuntu-14-04)
-
-# NGINX TODO
-Nothing yet
