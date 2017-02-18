@@ -11,7 +11,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
         php7-oauth php7-imap php7-gmp \
         g++ make autoconf && \
     cp /usr/share/zoneinfo/UTC /etc/localtime && \
-    echo "UTC" > /etc/timezone
+    echo "UTC" > /etc/timezone && \
+    mkdir -p /run/nginx
 
 ADD supervisord.conf /etc/supervisord.conf
 
