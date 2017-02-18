@@ -6,7 +6,7 @@ metadata:
     app: nginx
   name: nginx
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       name: nginx
@@ -23,6 +23,9 @@ spec:
         - name: nginx-sites-enabled-conf
           configMap:
             name: nginx-sites-enabled-conf
+        - name: www-data
+          persistentVolumeClaim:
+            claimName: www-data-pv-claim
       containers:
         - name: nginx
           image: nginx:mainline-alpine
@@ -35,13 +38,12 @@ spec:
               mountPath: /etc/nginx
             - name: nginx-sites-enabled-conf
               mountPath: /etc/nginx/sites-enabled
-            - name: grafana-persistent-storage
-              persistentVolumeClaim:
-                claimName: nginx-pv-claim
+            - name: www-data
+              mountPath: /var/www
           resources:
             requests:
               memory: "200Mi"
               cpu: "250m"
             limits:
-              memory: "5000Mi"
-              cpu: "500m"
+              memory: "500Mi"
+              cpu: "400m"

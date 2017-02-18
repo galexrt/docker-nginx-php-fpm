@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nginx-pv-claim
+  name: www-data-pv-claim
   labels:
     app: nginx
 spec:
