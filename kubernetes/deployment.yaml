@@ -20,15 +20,15 @@ spec:
             items:
             - key: nginx.conf
               path: nginx.conf
-        - name: nginx-sites-enabled-conf
+        - name: nginx-confd
           configMap:
-            name: nginx-sites-enabled-conf
+            name: nginx-confd
         - name: www-data
           persistentVolumeClaim:
             claimName: www-data-pv-claim
       containers:
         - name: nginx
-          image: nginx:mainline-alpine
+          image: quay.io/galexrt/nginx-php-fpm:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -36,8 +36,8 @@ spec:
           volumeMounts:
             - name: nginx-conf
               mountPath: /etc/nginx
-            - name: nginx-sites-enabled-conf
-              mountPath: /etc/nginx/sites-enabled
+            - name: nginx-confd
+              mountPath: /etc/nginx/conf.d/
             - name: www-data
               mountPath: /var/www
           resources:
