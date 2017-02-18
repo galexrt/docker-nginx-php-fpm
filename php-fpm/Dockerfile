@@ -1,6 +1,6 @@
 FROM php:7-fpm-alpine
 
-RUN ls -ahl /usr/local/etc && \
+RUN ls /usr/local/etc /usr/local/etc/php && \
     sed -i 's/^(;)session.save_handler.*/session.save_handler = redis/' /usr/local/etc/php.ini
 
 ADD entrypoint.sh /entrypoint.sh
