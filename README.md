@@ -1,2 +1,2 @@
 # docker-nginx-php-fpm
-Docker iamge for running Nginx + PHP-FPM on Kubernetes
+Docker image for running Nginx + PHP-FPM on Kubernetes
