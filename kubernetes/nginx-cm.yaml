@@ -63,14 +63,10 @@ data:
         listen 80 http2;
         listen [::]:80 http2;
 
-        root /var/www/webspaces/example.com/www/public_html;
+        root /var/www/example.com/www/public_html;
         index index.php index.html index.htm;
         charset utf-8;
         error_page 404 /404.html;
-
-        # Logging
-        access_log /var/log/nginx/example.com-access.log;
-        error_log /var/log/nginx/example.com-error.log error;
 
         location / {
             try_files $uri $uri/ =404;
@@ -84,6 +80,7 @@ data:
             log_not_found off;
         }
         location ~ \.php$ {
+            include fastcgi_params;
             fastcgi_pass php-fpm:9000;
 
             # regex to split $uri to $fastcgi_script_name and $fastcgi_path
@@ -92,7 +89,6 @@ data:
             # Check that the PHP script exists before passing it
             try_files $fastcgi_script_name =404;
 
-            include fastcgi.conf;
             fastcgi_intercept_errors on;
             # Bypass the fact that try_files resets $fastcgi_path_info
             # see: http://trac.nginx.org/nginx/ticket/321

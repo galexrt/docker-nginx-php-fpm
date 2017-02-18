@@ -7,4 +7,4 @@ fi
 
 sed -i 's/^(;)session.save_path.*/session.save_path = '"$REDIS_ADDRESS"'/' /etc/php/fpm
 
-exec php-fpm -F
+exec php-fpm7 -F
