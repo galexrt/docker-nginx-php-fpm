@@ -14,12 +14,9 @@ spec:
         app: nginx
     spec:
       volumes:
-        - name: nginx-conf
+        - name: nginx-sites-conf
           configMap:
-            name: nginx-conf
-            items:
-            - key: nginx.conf
-              path: nginx.conf
+            name: nginx-sites-conf
         - name: nginx-confd
           configMap:
             name: nginx-confd

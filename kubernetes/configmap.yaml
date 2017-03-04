@@ -50,7 +50,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-confd
+  name: nginx-sites-conf
 data:
   default.conf: |
     server {
