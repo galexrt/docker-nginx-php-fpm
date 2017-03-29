@@ -1,9 +1,9 @@
 FROM alpine:3.5
 MAINTAINER Alexander Trost <galexrt@googlemail.com>
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk upgrade && \
-    apk --no-cache add tzdata supervisor nginx php7 php7-fpm php7-pear \
+RUN apk upgrade --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" && \
+    apk --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" add \
+        tzdata supervisor nginx php7 php7-fpm php7-pear \
         php7-xml php7-redis php7-bcmath \
         php7-pdo php7-pdo_mysql php7-mysqli php7-mbstring php7-gd php7-mcrypt \
         php7-openssl php7-apcu php7-gmagick php7-xsl php7-zip php7-sockets \
@@ -14,6 +14,6 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
     echo "UTC" > /etc/timezone && \
     mkdir -p /run/nginx
 
-ADD supervisord.conf /etc/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
