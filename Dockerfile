@@ -1,8 +1,9 @@
-FROM alpine:3.5
+FROM alpine:edge
 MAINTAINER Alexander Trost <galexrt@googlemail.com>
 
-RUN apk upgrade --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" && \
-    apk --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" add \
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk upgrade --no-cache && \
+    apk --no-cache add \
         tzdata supervisor nginx php7 php7-fpm php7-pear \
         php7-xml php7-redis php7-bcmath \
         php7-pdo php7-pdo_mysql php7-mysqli php7-mbstring php7-gd php7-mcrypt \
