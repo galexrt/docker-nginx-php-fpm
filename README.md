@@ -7,11 +7,14 @@ Image available from:
 * [**Quay.io**](https://quay.io/repository/galexrt/nginx-php-fpm)
 * [**Docker Hub**](https://hub.docker.com/r/galexrt/nginx-php-fpm)
 
-Docker image for running Nginx + PHP-FPM (especially for running on Kubernetes)
+Docker image for running Nginx + PHP-FPM in one container, using supervisor.*
 
-# Please note that this is currently more of a "concept" and hasn't been tested yet!
+*Running more than one process in a container isn't recommended, but for the sake of "simplicity" when quickly
+wanting to run a PHP application.
 
-## Basic usage
+## Please note that this is currently more of a "concept" and hasn't been tested yet!
+
+### Basic usage
 ```
 docker run \
     -d \
