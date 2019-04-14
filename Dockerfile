@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.9
 LABEL maintainer="Alexander Trost <galexrt@googlemail.com>"
 
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
